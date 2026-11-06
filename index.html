@@ -137,6 +137,11 @@
   .bar.n { background: #8F8D85; }
   .chart:has(.night-band.in) .bar.n { background: var(--clay-ink); }
 
+  /* one more thing */
+  .s-more { background: var(--slate); color: var(--ivory); justify-content: center; align-items: center; }
+  .s-more h2 { font-size: 104px; }
+  .s-more .count { color: #9C9A92; }
+
   .count { position: absolute; right: 36px; bottom: 26px; font-size: 16px; color: var(--muted); letter-spacing: .08em; }
   .s-night .count { color: #9C9A92; }
   .s-title .count { color: var(--ivory); }
@@ -222,6 +227,11 @@
       <div class="tile"><video src="media/place.mp4" poster="media/place.jpg" muted loop playsinline preload="auto"></video><span class="cap">Placing in the bowl</span></div>
       <div class="tile"><video src="media/brain.mp4" poster="media/brain.jpg" muted loop playsinline preload="auto"></video><span class="cap">Pick and drop, on request</span></div>
     </div>
+    <div class="count"></div>
+  </section>
+
+  <section class="slide s-more">
+    <h2>And one more thing&hellip;</h2>
     <div class="count"></div>
   </section>
 
