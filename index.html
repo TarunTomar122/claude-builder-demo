@@ -88,7 +88,7 @@
 
   /* skill library */
   .lib-label { margin-top: 30px; font-size: 22px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
-  .skills { margin-top: 22px; flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-content: center; }
+  .skills { margin-top: 30px; flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-content: center; }
   .skills span { font-family: var(--serif); font-size: 40px; text-align: center; padding: 18px 10px; border-radius: 18px;
                  background: var(--ivory); border: 1px solid var(--line); }
 
@@ -117,7 +117,7 @@
   /* went to bed vs woke up */
   .s-split { padding: 0; flex-direction: row; }
   .s-split .half { flex: 1; padding: 120px 64px 56px; display: flex; flex-direction: column; justify-content: flex-start; gap: 28px; }
-  .s-split .half .kicker { margin-bottom: 0; font-size: 22px; }
+  .s-split .half h2 { font-size: 52px; }
   .s-split .night { background: var(--slate); color: var(--ivory); }
   .s-split .night .kicker { color: #E8956F; }
   .s-split .night figure img { border-color: #3A3A37; box-shadow: 0 14px 40px rgba(0,0,0,.45); }
@@ -151,8 +151,7 @@
   </section>
 
   <section class="slide">
-    <div class="kicker">The idea</div>
-    <h2>Build a robot. Then teach it skills.</h2>
+    <h2>I built the arm, then had to teach it skills.</h2>
     <div class="two">
       <div class="card">
         <div class="head"><span class="num">01</span><span class="big">Build it</span><span class="tag done">Done</span></div>
@@ -160,7 +159,6 @@
       </div>
       <div class="card">
         <div class="head"><span class="num">02</span><span class="big">Train it</span><span class="tag slow">The slow part</span></div>
-        <div class="lib-label">A library of skills</div>
         <div class="skills"><span>reach</span><span>grab</span><span>hold</span><span>drop</span><span>place</span><span>stack</span><span>clean</span><span>dance</span></div>
       </div>
     </div>
@@ -168,8 +166,7 @@
   </section>
 
   <section class="slide">
-    <div class="kicker">Why Claude</div>
-    <h2>Alone, it would have taken 6+ more days.</h2>
+    <h2>Alone, it would have taken me 6+ more days.</h2>
     <div class="why-grid">
       <div class="mini">
         <div class="stat"><b>90</b><span>training runs</span></div>
@@ -188,12 +185,12 @@
 
   <section class="slide s-split">
     <div class="half night">
-      <div class="kicker">How I went to bed</div>
+      <h2>This is how I went to bed.</h2>
       <figure><img src="shots/night-2.png" alt="dont be done before 6 am"><figcaption>Thu 22 Oct, 20:55</figcaption></figure>
       <figure><img src="shots/night-4.png" alt="ur on ur own now im going to bed"><figcaption>Thu 5 Nov, 19:19</figcaption></figure>
     </div>
     <div class="half day">
-      <div class="kicker">How I woke up</div>
+      <h2>This is how I woke up.</h2>
       <figure><img src="shots/morning-1.png" alt="im back what do i have to do?"><figcaption>Wed 21 Oct, 07:03</figcaption></figure>
       <figure><img src="shots/morning-3.png" alt="so how did it go tellme. in simple ways"><figcaption>Fri 6 Nov, 05:22</figcaption></figure>
     </div>
@@ -201,8 +198,7 @@
   </section>
 
   <section class="slide">
-    <div class="kicker">What it learned</div>
-    <h2>Demos</h2>
+    <h2>Here is what it learned to do.</h2>
     <div class="grid">
       <div class="tile"><video src="media/clean.mp4" poster="media/clean.jpg" muted loop playsinline preload="auto"></video><span class="cap">Cleaning the desk</span></div>
       <div class="tile"><video src="media/pick.mp4" poster="media/pick.jpg" muted loop playsinline preload="auto"></video><span class="cap">Picking up</span></div>
@@ -215,8 +211,7 @@
 
   <section class="slide s-final">
     <div class="left">
-      <div class="kicker">The last step</div>
-      <h2>Then I gave Claude the robot as tools.</h2>
+      <h2>Then I gave Claude the skills as tools.</h2>
       <div class="tools"><span>look</span><span>reach</span><span>grab</span><span>gripper</span><span>park</span><span>stop</span></div>
       <div class="thanks">Thank you · Tarun Tomar</div>
     </div>
