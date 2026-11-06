@@ -142,6 +142,21 @@
   .s-more h2 { font-size: 104px; }
   .s-more .count { color: #9C9A92; }
 
+  /* the training loop */
+  .loop-area { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-bottom: 20px; }
+  .loop-row { display: flex; align-items: stretch; }
+  .stepbox { flex: 1; background: var(--cream); border-radius: 24px; padding: 30px 30px 28px; display: flex; flex-direction: column; gap: 8px; min-height: 310px;
+             box-shadow: inset 0 0 0 3px transparent; transition: box-shadow .45s ease; }
+  .stepbox .n { font-family: var(--serif); font-size: 24px; color: var(--muted); }
+  .stepbox b { font-family: var(--serif); font-weight: 400; font-size: 46px; line-height: 1.1; letter-spacing: -0.01em; }
+  .stepbox .sub { font-size: 24px; color: var(--muted); }
+  .loop-row:has(.who.in) .stepbox.me { box-shadow: inset 0 0 0 3px var(--clay-ink); }
+  .arrow { width: 64px; flex: none; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--muted); }
+  .who { margin-top: auto; align-self: flex-start; font-size: 22px; font-weight: 700; padding: 8px 18px; border-radius: 999px; background: var(--line); color: var(--slate); }
+  .who.me { background: var(--clay-ink); color: var(--ivory); }
+  .back { position: relative; margin: 0 10%; height: 64px; border: 3px solid var(--line); border-top: none; border-radius: 0 0 28px 28px; }
+  .back span { position: absolute; left: 50%; bottom: -16px; transform: translateX(-50%); background: var(--ivory); padding: 0 18px; font-size: 22px; color: var(--muted); white-space: nowrap; }
+
   .count { position: absolute; right: 36px; bottom: 26px; font-size: 16px; color: var(--muted); letter-spacing: .08em; }
   .s-night .count { color: #9C9A92; }
   .s-title .count { color: var(--ivory); }
@@ -183,6 +198,24 @@
         <div class="skills f" data-f="2"><span>reach</span><span>grab</span><span>hold</span><span>drop</span><span>place</span><span>stack</span><span>clean</span><span>dance</span></div>
       </div>
     </div>
+    <div class="count"></div>
+  </section>
+
+  <section class="slide">
+    <h2>Every training run ended by waiting for me.</h2>
+    <div class="loop-area">
+    <div class="loop-row">
+      <div class="stepbox me"><span class="n">1</span><b>New idea</b><span class="sub">what to try next</span><span class="who me f" data-f="1">me</span></div>
+      <div class="arrow">&rarr;</div>
+      <div class="stepbox"><span class="n">2</span><b>Train it</b><span class="sub">about 1.5 h</span><span class="who f" data-f="1">GPU</span></div>
+      <div class="arrow">&rarr;</div>
+      <div class="stepbox"><span class="n">3</span><b>Test it</b><span class="sub">in the simulator</span><span class="who f" data-f="1">GPU</span></div>
+      <div class="arrow">&rarr;</div>
+      <div class="stepbox me"><span class="n">4</span><b>Fix it</b><span class="sub">from the results</span><span class="who me f" data-f="1">me</span></div>
+    </div>
+    <div class="back"><span>then start again, 90 times</span></div>
+    </div>
+    <div class="punch f" data-f="2">When I slept, ate or sat in class, the loop just stopped.</div>
     <div class="count"></div>
   </section>
 
