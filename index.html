@@ -182,12 +182,12 @@
   </section>
 
   <section class="slide">
-    <h2>Alone, it would have taken me 6+ more days.</h2>
+    <h2>Alone, it would have taken me 7+ more days.</h2>
     <div class="why-grid">
       <div class="mini">
         <div class="stat"><b>90</b><span>training runs</span></div>
         <div class="stat"><b>1.5 h</b><span>for each run, on average</span></div>
-        <div class="stat hot f" data-f="2"><b>50 h</b><span>of training ran while I slept</span></div>
+        <div class="stat hot f" data-f="2"><b>58 h</b><span>of training ran while I slept</span></div>
       </div>
       <div class="chart-wrap f" data-f="1">
         <div class="chart-title">When each run started</div>
@@ -195,7 +195,7 @@
       </div>
     </div>
     <div class="punch f" data-f="3">Claude kept going while I slept, ate, ran and sat in class.</div>
-    <div class="src f" data-f="3">From my training logs, 21 Oct to 6 Nov, cluster runs not counted. 50 h ran between 11 pm and 7 am; at 8 h of my own time a day, that is 6+ days.</div>
+    <div class="src f" data-f="3">From my training logs, 21 Oct to 6 Nov, cluster runs not counted. 58 h ran between 8 pm and 5 am; at 8 h of my own time a day, that is 7+ days.</div>
     <div class="count"></div>
   </section>
 
@@ -282,7 +282,7 @@
 (function () {
   const runs = [6, 8, 4, 1, 7, 6, 2, 4, 1, 2, 4, 1, 3, 1, 1, 1, 2, 2, 3, 4, 6, 7, 8, 6];
   const order = [12,13,14,15,16,17,18,19,20,21,22,23,0,1,2,3,4,5,6,7,8,9,10,11];
-  const isNight = h => h >= 23 || h < 7;
+  const isNight = h => h >= 20 || h < 5;
   const lab = h => (h % 12 || 12) + (h < 12 ? ' am' : ' pm');
   const max = Math.max(...runs);
   const el = document.getElementById('hours');
@@ -292,10 +292,10 @@
     xs += `<span>${h % 6 === 0 ? lab(h) : ''}</span>`;
   });
   el.innerHTML = `<div class="plot"><div class="night-band f" data-f="2"><em>asleep</em></div>${bars}</div><div class="xlab">${xs}</div>`;
-  // night band spans the 11 pm .. 6 am bars (slots 11..18)
+  // night band spans the 8 pm .. 4 am bars (slots 8..16)
   const b = el.querySelectorAll('.bar'), band = el.querySelector('.night-band');
-  band.style.left = (b[11].offsetLeft - 6) + 'px';
-  band.style.width = (b[18].offsetLeft + b[18].offsetWidth - b[11].offsetLeft + 12) + 'px';
+  band.style.left = (b[8].offsetLeft - 6) + 'px';
+  band.style.width = (b[16].offsetLeft + b[16].offsetWidth - b[8].offsetLeft + 12) + 'px';
 })();
   const step0 = +(location.hash.split('.')[1] || 0);
   fit(); show(i); setStep(step0);
