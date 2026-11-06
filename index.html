@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I built and trained a robot with Claude · Tarun Tomar</title>
+<style>
+  :root {
+    --clay: #D97757;       /* Anthropic orange: backgrounds only */
+    --clay-ink: #A84B2B;   /* orange for text and filled labels (5.4:1 on ivory) */
+    --ivory: #FAF9F5;
+    --cream: #F0EEE6;
+    --slate: #141413;
+    --muted: #5E5D58;      /* 6:1 on ivory */
+    --line: #E3E1D8;
+    --serif: "Tiempos Headline", ui-serif, "New York", Georgia, serif;
+    --sans: "Styrene A", ui-sans-serif, -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: var(--slate); overflow: hidden; font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+
+  #deck { position: absolute; left: 50%; top: 50%; width: 1600px; height: 900px; transform-origin: center; }
+  .slide { position: absolute; inset: 0; padding: 88px 112px; display: flex; flex-direction: column;
+           background: var(--ivory); color: var(--slate); visibility: hidden; opacity: 0; transition: opacity .4s ease, visibility 0s .4s; }
+  .slide.active { visibility: visible; opacity: 1; transition: opacity .4s ease; }
+
+  h1, h2 { font-family: var(--serif); font-weight: 400; letter-spacing: -0.02em; }
+  h2 { font-size: 64px; line-height: 1.05; }
+  .kicker { font-size: 20px; letter-spacing: .14em; text-transform: uppercase; color: var(--clay-ink); font-weight: 700; margin-bottom: 20px; }
+
+  /* 1 · title: Anthropic orange, dark text */
+  .s-title { background: var(--clay); color: var(--slate); justify-content: center; }
+  .s-title h1 { font-size: 116px; line-height: 1.0; max-width: 1150px; }
+  .s-title .who { margin-top: 56px; font-size: 32px; font-weight: 600; }
+  .s-title .who span { font-weight: 400; }
+  .spark { position: absolute; right: 112px; bottom: 88px; width: 132px; height: 132px; }
+
+  /* 2 · build it / train it */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 44px; flex: 1; min-height: 0; }
+  .card { background: var(--cream); border-radius: 28px; padding: 36px 40px; display: flex; flex-direction: column; min-height: 0; }
+  .card .head { display: flex; align-items: baseline; gap: 16px; }
+  .card .num { font-family: var(--serif); font-size: 26px; color: var(--muted); }
+  .card .big { font-family: var(--serif); font-size: 50px; }
+  .card .tag { margin-left: auto; font-size: 20px; font-weight: 700; padding: 8px 18px; border-radius: 999px; }
+  .tag.done { background: #DDE5D0; color: #3B4B26; }
+  .tag.slow { background: var(--clay-ink); color: var(--ivory); }
+  .photos { margin-top: 24px; flex: 1; min-height: 0; display: grid; grid-template-columns: 1.25fr 1fr; gap: 16px; }
+  .photos img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; display: block; }
+  .loop { margin-top: 22px; font-size: 26px; color: var(--muted); }
+  .loop b { color: var(--slate); }
+  .shot { margin-top: 22px; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  .shot img { max-width: 100%; max-height: 100%; border-radius: 14px; box-shadow: 0 10px 30px rgba(20,20,19,.18); }
+  .slot { width: 100%; height: 100%; border: 3px dashed #C9C6BA; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+          color: var(--muted); font-size: 22px; text-align: center; padding: 24px; }
+
+  /* 3/4 · real chat screenshots */
+  .s-night { background: var(--slate); color: var(--ivory); }
+  .s-night .kicker { color: #E8956F; }  /* 6.9:1 on slate */
+  .shots { margin-top: 36px; flex: 1; min-height: 0; display: flex; gap: 28px; align-items: center; justify-content: center; flex-wrap: wrap; }
+  .shots img { max-height: 330px; max-width: 660px; border-radius: 14px; box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+  .s-night .slot { border-color: #4A4945; color: #B4B2A9; }
+
+  /* 5 · demos */
+  .grid { margin-top: 36px; flex: 1; min-height: 0; display: flex; flex-wrap: wrap; justify-content: center; align-content: center; gap: 22px; }
+  .tile { position: relative; width: 440px; height: 248px; border-radius: 18px; overflow: hidden; background: #000; cursor: zoom-in; }
+  .tile video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tile .cap { position: absolute; left: 12px; bottom: 12px; background: var(--ivory); color: var(--slate);
+               font-size: 20px; font-weight: 700; padding: 7px 15px; border-radius: 999px; }
+  #zoom { position: fixed; inset: 0; z-index: 10; background: rgba(20,20,19,.92); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
+  #zoom.on { display: flex; }
+  #zoom video { max-width: 92vw; max-height: 88vh; border-radius: 16px; }
+
+  /* 6 · finale */
+  .s-final { flex-direction: row; gap: 56px; align-items: center; }
+  .s-final .left { width: 460px; flex: none; }
+  .s-final h2 { font-size: 66px; }
+  .tools { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .tools span { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 22px; padding: 9px 16px; border-radius: 12px;
+                background: var(--cream); border: 1px solid var(--line); color: var(--slate); }
+  .s-final .thanks { margin-top: 44px; font-size: 24px; color: var(--muted); }
+  .s-final .vid { flex: 1; border-radius: 22px; overflow: hidden; background: #000; aspect-ratio: 16/9; }
+  .s-final video { width: 100%; height: 100%; display: block; }
+
+  .count { position: absolute; right: 36px; bottom: 26px; font-size: 16px; color: var(--muted); letter-spacing: .08em; }
+  .s-night .count { color: #9C9A92; }
+  .s-title .count { color: var(--slate); }
+  .hint { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); color: #9C9A92; font: 13px var(--sans); opacity: .8; }
+
+  @media print {
+    @page { size: 1600px 900px; margin: 0; }
+    html, body { overflow: visible; height: auto; background: none; }
+    #deck { position: static; transform: none !important; }
+    .slide { position: relative; visibility: visible; opacity: 1; width: 1600px; height: 900px; break-after: page; }
+    .count, .hint { display: none; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+
+  <section class="slide s-title">
+    <h1>I built and trained a robot with Claude</h1>
+    <div class="who">Tarun Tomar <span>· MSc Artificial Intelligence, University of Edinburgh</span></div>
+    <svg class="spark" viewBox="0 0 100 100" aria-hidden="true"><g fill="#141413">
+      <rect x="46" y="4" width="8" height="92" rx="4"/><rect x="46" y="4" width="8" height="92" rx="4" transform="rotate(45 50 50)"/>
+      <rect x="46" y="4" width="8" height="92" rx="4" transform="rotate(90 50 50)"/><rect x="46" y="4" width="8" height="92" rx="4" transform="rotate(135 50 50)"/></g></svg>
+    <div class="count"></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">The idea</div>
+    <h2>Build a robot. Then teach it.</h2>
+    <div class="two">
+      <div class="card">
+        <div class="head"><span class="num">01</span><span class="big">Build it</span><span class="tag done">Done</span></div>
+        <div class="photos"><img src="media/build-assembly.jpg" alt="Assembling the arm"><img src="media/build-parts.jpg" alt="Printed parts"></div>
+      </div>
+      <div class="card">
+        <div class="head"><span class="num">02</span><span class="big">Train it</span><span class="tag slow">I was the slow part</span></div>
+        <div class="loop"><b>new idea</b> → train → wait → test → repeat</div>
+        <div class="shot" data-shots="train"></div>
+      </div>
+    </div>
+    <div class="count"></div>
+  </section>
+
+  <section class="slide s-night">
+    <div class="kicker">How I ended my nights</div>
+    <div class="shots" data-shots="night"></div>
+    <div class="count"></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">How I woke up</div>
+    <div class="shots" data-shots="morning"></div>
+    <div class="count"></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">What it learned</div>
+    <h2>Demos</h2>
+    <div class="grid">
+      <div class="tile"><video src="media/clean.mp4" poster="media/clean.jpg" muted loop playsinline preload="auto"></video><span class="cap">Cleaning the desk</span></div>
+      <div class="tile"><video src="media/pick.mp4" poster="media/pick.jpg" muted loop playsinline preload="auto"></video><span class="cap">Picking up</span></div>
+      <div class="tile"><video src="media/stack.mp4" poster="media/stack.jpg" muted loop playsinline preload="auto"></video><span class="cap">Stacking cubes</span></div>
+      <div class="tile"><video src="media/place.mp4" poster="media/place.jpg" muted loop playsinline preload="auto"></video><span class="cap">Placing in the bowl</span></div>
+      <div class="tile"><video src="media/brain.mp4" poster="media/brain.jpg" muted loop playsinline preload="auto"></video><span class="cap">Pick and drop, on request</span></div>
+    </div>
+    <div class="count"></div>
+  </section>
+
+  <section class="slide s-final">
+    <div class="left">
+      <div class="kicker">The last step</div>
+      <h2>Then I gave Claude the robot as tools.</h2>
+      <div class="tools"><span>look</span><span>reach</span><span>grab</span><span>gripper</span><span>park</span><span>stop</span></div>
+      <div class="thanks">Thank you · Tarun Tomar</div>
+    </div>
+    <div class="vid"><video src="media/main-run.mp4" poster="media/main-poster.jpg" controls playsinline preload="metadata"></video></div>
+    <div class="count"></div>
+  </section>
+
+</div>
+<div id="zoom"><video muted loop playsinline controls></video></div>
+<div class="hint">← → to move · click a demo to enlarge</div>
+<script>
+  // Real chat screenshots: shots/night-1.png … night-6.png, shots/morning-1.png …, shots/train-1.png (any that exist are shown)
+  const SLOT_TEXT = { train: 'Screenshot: the "keep going for hours" message', night: 'Screenshots: my last messages each night', morning: 'Screenshots: my first messages each morning' };
+  document.querySelectorAll('[data-shots]').forEach(box => {
+    const kind = box.dataset.shots, max = kind === 'train' ? 1 : 6;
+    let found = 0, pending = max;
+    for (let n = 1; n <= max; n++) {
+      const img = new Image();
+      img.alt = kind + ' ' + n;
+      img.onload = () => { found++; box.querySelector('.slot')?.remove(); box.appendChild(img); };
+      img.onerror = () => { if (--pending === 0 && !found && !box.children.length) {
+        const s = document.createElement('div'); s.className = 'slot'; s.textContent = SLOT_TEXT[kind]; box.appendChild(s); } };
+      img.src = `shots/${kind}-${n}.png`;
+    }
+  });
+
+  const deck = document.getElementById('deck');
+  const slides = [...document.querySelectorAll('.slide')];
+  const zoom = document.getElementById('zoom'), zv = zoom.querySelector('video');
+  let i = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1)) || 1) - 1));
+
+  function fit() { deck.style.transform = `translate(-50%, -50%) scale(${Math.min(innerWidth / 1600, innerHeight / 900)})`; }
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((el, k) => {
+      el.classList.toggle('active', k === i);
+      el.querySelector('.count').textContent = `${k + 1} / ${slides.length}`;
+      el.querySelectorAll('video').forEach(v => { if (k === i && v.loop) v.play().catch(() => {}); else v.pause(); });
+    });
+    history.replaceState(null, '', '#' + (i + 1));
+  }
+  function closeZoom() { zoom.classList.remove('on'); zv.pause(); }
+  document.querySelectorAll('.tile').forEach(t => t.addEventListener('click', () => {
+    zv.src = t.querySelector('video').getAttribute('src'); zoom.classList.add('on'); zv.play().catch(() => {});
+  }));
+  zoom.addEventListener('click', e => { if (e.target === zoom) closeZoom(); });
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape') return closeZoom();
+    if (e.target.tagName === 'VIDEO' && e.key === ' ') return;
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); closeZoom(); show(i + 1); }
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); closeZoom(); show(i - 1); }
+    if (e.key === 'f') document.documentElement.requestFullscreen?.();
+  });
+  let x0 = null;
+  addEventListener('touchstart', e => x0 = e.touches[0].clientX);
+  addEventListener('touchend', e => { if (x0 === null) return; const d = e.changedTouches[0].clientX - x0; if (Math.abs(d) > 50) show(i + (d < 0 ? 1 : -1)); x0 = null; });
+  addEventListener('resize', fit);
+  fit(); show(i);
+</script>
+</body>
+</html>
