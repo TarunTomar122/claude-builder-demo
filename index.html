@@ -86,6 +86,27 @@
   .s-final .vid { flex: 1; border-radius: 22px; overflow: hidden; background: #000; aspect-ratio: 16/9; }
   .s-final video { width: 100%; height: 100%; display: block; }
 
+  /* training is slow */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 56px; }
+  .stat { background: var(--cream); border-radius: 28px; padding: 36px 40px; }
+  .stat b { display: block; font-family: var(--serif); font-weight: 400; font-size: 112px; line-height: 1; letter-spacing: -0.03em; }
+  .stat span { display: block; margin-top: 14px; font-size: 26px; color: var(--muted); }
+  .why { margin-top: 48px; font-size: 30px; color: var(--muted); max-width: 1376px; }
+  .punch { margin-top: auto; font-family: var(--serif); font-size: 60px; color: var(--clay-ink); letter-spacing: -0.02em; }
+  .src { position: absolute; left: 112px; bottom: 30px; font-size: 16px; color: var(--muted); }
+
+  /* when runs started */
+  .chart { position: relative; margin-top: 40px; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .plot { position: relative; flex: 1; display: flex; align-items: flex-end; gap: 10px; border-bottom: 1px solid var(--line); padding: 0 4px; }
+  .night-band { position: absolute; top: 0; bottom: 0; background: var(--cream); border-radius: 16px 16px 0 0; }
+  .night-band em { position: absolute; top: 16px; left: 0; right: 0; text-align: center; font-style: normal; font-size: 22px; font-weight: 700; color: var(--clay-ink); }
+  .bar { position: relative; flex: 1; border-radius: 4px 4px 0 0; background: #8F8D85; }
+  .bar.n { background: var(--clay-ink); }
+  .bar::after { content: attr(data-v); position: absolute; top: -30px; left: 0; right: 0; text-align: center; font-size: 18px; color: var(--muted); opacity: 0; transition: opacity .15s; }
+  .bar:hover::after { opacity: 1; }
+  .xlab { display: flex; gap: 10px; padding: 12px 4px 0; }
+  .xlab span { flex: 1; text-align: center; font-size: 18px; color: var(--muted); white-space: nowrap; }
+
   .count { position: absolute; right: 36px; bottom: 26px; font-size: 16px; color: var(--muted); letter-spacing: .08em; }
   .s-night .count { color: #9C9A92; }
   .s-title .count { color: var(--ivory); }
@@ -130,6 +151,20 @@
     <div class="count"></div>
   </section>
 
+  <section class="slide">
+    <div class="kicker">The slow part</div>
+    <h2>Every new idea meant hours of training.</h2>
+    <div class="stats">
+      <div class="stat"><b>92</b><span>training runs</span></div>
+      <div class="stat"><b>1.6 h</b><span>for an average run</span></div>
+      <div class="stat"><b>135 h</b><span>of training in 16 days</span></div>
+    </div>
+    <p class="why">After every run, someone had to check it, fix it and start the next one. That was me, and I have to sleep.</p>
+    <div class="punch">Then I realised Claude doesn&rsquo;t get tired.</div>
+    <div class="src">From my training logs, 21 Oct to 6 Nov.</div>
+    <div class="count"></div>
+  </section>
+
   <section class="slide s-night s-chat">
     <div class="kicker">How I ended my nights</div>
     <div class="shots four">
@@ -148,6 +183,14 @@
       <figure><img src="shots/morning-2.png" alt="so how did it go?"><figcaption>Fri 6 Nov, 05:21 · training thread</figcaption></figure>
       <figure><img src="shots/morning-3.png" alt="so how did it go tellme. in simple ways"><figcaption>Fri 6 Nov, 05:22 · second thread</figcaption></figure>
     </div>
+    <div class="count"></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">What changed</div>
+    <h2>4 in 10 runs started while I was asleep.</h2>
+    <div class="chart" id="hours"></div>
+    <div class="src">When each of the 92 training runs started, by hour of day.</div>
     <div class="count"></div>
   </section>
 
@@ -211,6 +254,26 @@
   addEventListener('touchend', e => { if (x0 === null) return; const d = e.changedTouches[0].clientX - x0; if (Math.abs(d) > 50) show(i + (d < 0 ? 1 : -1)); x0 = null; });
   addEventListener('resize', fit);
   fit(); show(i);
+
+// start hour of each training run, from the run logs (hour 0..23)
+(function () {
+  const runs = [6, 8, 4, 1, 7, 6, 2, 4, 1, 2, 4, 1, 3, 1, 1, 1, 2, 2, 3, 5, 6, 7, 9, 6];
+  const order = [12,13,14,15,16,17,18,19,20,21,22,23,0,1,2,3,4,5,6,7,8,9,10,11];
+  const isNight = h => h >= 23 || h < 7;
+  const lab = h => (h % 12 || 12) + (h < 12 ? ' am' : ' pm');
+  const max = Math.max(...runs);
+  const el = document.getElementById('hours');
+  let bars = '', xs = '';
+  order.forEach(h => {
+    bars += `<div class="bar${isNight(h) ? ' n' : ''}" style="height:${runs[h] / max * 82}%" data-v="${runs[h]}" title="${lab(h)}: ${runs[h]} runs"></div>`;
+    xs += `<span>${h % 3 === 0 ? lab(h) : ''}</span>`;
+  });
+  el.innerHTML = `<div class="plot"><div class="night-band"><em>asleep</em></div>${bars}</div><div class="xlab">${xs}</div>`;
+  // night band spans the 11 pm .. 6 am bars (slots 11..18)
+  const b = el.querySelectorAll('.bar'), band = el.querySelector('.night-band');
+  band.style.left = (b[11].offsetLeft - 6) + 'px';
+  band.style.width = (b[18].offsetLeft + b[18].offsetWidth - b[11].offsetLeft + 12) + 'px';
+})();
 </script>
 </body>
 </html>
