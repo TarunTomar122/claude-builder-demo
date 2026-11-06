@@ -108,7 +108,6 @@
   .night-band { position: absolute; top: 0; bottom: 0; background: var(--cream); border-radius: 14px 14px 0 0; }
   .night-band em { position: absolute; top: 10px; left: 0; right: 0; text-align: center; font-style: normal; font-size: 19px; font-weight: 700; color: var(--clay-ink); }
   .bar { position: relative; flex: 1; border-radius: 4px 4px 0 0; background: #8F8D85; }
-  .bar.n { background: var(--clay-ink); }
   .bar::after { content: attr(data-v); position: absolute; top: -26px; left: -6px; right: -6px; text-align: center; font-size: 16px; color: var(--muted); opacity: 0; transition: opacity .15s; }
   .bar:hover::after { opacity: 1; }
   .xlab { display: flex; gap: 6px; padding: 10px 4px 0; }
@@ -123,6 +122,21 @@
   .s-split .night figure img { border-color: #3A3A37; box-shadow: 0 14px 40px rgba(0,0,0,.45); }
   .s-split .night figcaption { color: #B4B2A9; }
 
+  /* click-to-reveal steps */
+  .f { opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .45s ease; }
+  .f.in { opacity: 1; transform: none; }
+  .night-band.f { transform: none; }
+  .skills.f { opacity: 1; transform: none; }
+  .skills span { opacity: 0; transform: translateY(10px); transition: opacity .35s ease, transform .35s ease; }
+  .skills.in span { opacity: 1; transform: none; }
+  .skills.in span:nth-child(2) { transition-delay: .07s; } .skills.in span:nth-child(3) { transition-delay: .14s; }
+  .skills.in span:nth-child(4) { transition-delay: .21s; } .skills.in span:nth-child(5) { transition-delay: .28s; }
+  .skills.in span:nth-child(6) { transition-delay: .35s; } .skills.in span:nth-child(7) { transition-delay: .42s; }
+  .skills.in span:nth-child(8) { transition-delay: .49s; }
+  .bar { transition: background .5s ease; }
+  .bar.n { background: #8F8D85; }
+  .chart:has(.night-band.in) .bar.n { background: var(--clay-ink); }
+
   .count { position: absolute; right: 36px; bottom: 26px; font-size: 16px; color: var(--muted); letter-spacing: .08em; }
   .s-night .count { color: #9C9A92; }
   .s-title .count { color: var(--ivory); }
@@ -134,6 +148,8 @@
     #deck { position: static; transform: none !important; }
     .slide { position: relative; visibility: visible; opacity: 1; width: 1600px; height: 900px; break-after: page; }
     .count, .hint { display: none; }
+    .f, .skills span { opacity: 1 !important; transform: none !important; }
+    .bar.n { background: var(--clay-ink) !important; }
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
@@ -157,9 +173,9 @@
         <div class="head"><span class="num">01</span><span class="big">Build it</span><span class="tag done">Done</span></div>
         <div class="photos"><img src="media/build-assembly.jpg" alt="Assembling the arm"><img src="media/build-parts.jpg" alt="Printed parts"></div>
       </div>
-      <div class="card">
+      <div class="card f" data-f="1">
         <div class="head"><span class="num">02</span><span class="big">Train it</span><span class="tag slow">The slow part</span></div>
-        <div class="skills"><span>reach</span><span>grab</span><span>hold</span><span>drop</span><span>place</span><span>stack</span><span>clean</span><span>dance</span></div>
+        <div class="skills f" data-f="2"><span>reach</span><span>grab</span><span>hold</span><span>drop</span><span>place</span><span>stack</span><span>clean</span><span>dance</span></div>
       </div>
     </div>
     <div class="count"></div>
@@ -171,15 +187,15 @@
       <div class="mini">
         <div class="stat"><b>90</b><span>training runs</span></div>
         <div class="stat"><b>1.5 h</b><span>for each run, on average</span></div>
-        <div class="stat hot"><b>50 h</b><span>of training ran while I slept</span></div>
+        <div class="stat hot f" data-f="2"><b>50 h</b><span>of training ran while I slept</span></div>
       </div>
-      <div class="chart-wrap">
+      <div class="chart-wrap f" data-f="1">
         <div class="chart-title">When each run started</div>
         <div class="chart" id="hours"></div>
       </div>
     </div>
-    <div class="punch">Claude kept going while I slept, ate, ran and sat in class.</div>
-    <div class="src">From my training logs, 21 Oct to 6 Nov, cluster runs not counted. 50 h ran between 11 pm and 7 am; at 8 h of my own time a day, that is 6+ days.</div>
+    <div class="punch f" data-f="3">Claude kept going while I slept, ate, ran and sat in class.</div>
+    <div class="src f" data-f="3">From my training logs, 21 Oct to 6 Nov, cluster runs not counted. 50 h ran between 11 pm and 7 am; at 8 h of my own time a day, that is 6+ days.</div>
     <div class="count"></div>
   </section>
 
@@ -187,12 +203,12 @@
     <div class="half night">
       <h2>This is how I went to bed.</h2>
       <figure><img src="shots/night-2.png" alt="dont be done before 6 am"><figcaption>Thu 22 Oct, 20:55</figcaption></figure>
-      <figure><img src="shots/night-4.png" alt="ur on ur own now im going to bed"><figcaption>Thu 5 Nov, 19:19</figcaption></figure>
+      <figure class="f" data-f="1"><img src="shots/night-4.png" alt="ur on ur own now im going to bed"><figcaption>Thu 5 Nov, 19:19</figcaption></figure>
     </div>
     <div class="half day">
-      <h2>This is how I woke up.</h2>
-      <figure><img src="shots/morning-1.png" alt="im back what do i have to do?"><figcaption>Wed 21 Oct, 07:03</figcaption></figure>
-      <figure><img src="shots/morning-3.png" alt="so how did it go tellme. in simple ways"><figcaption>Fri 6 Nov, 05:22</figcaption></figure>
+      <h2 class="f" data-f="2">This is how I woke up.</h2>
+      <figure class="f" data-f="2"><img src="shots/morning-1.png" alt="im back what do i have to do?"><figcaption>Wed 21 Oct, 07:03</figcaption></figure>
+      <figure class="f" data-f="3"><img src="shots/morning-3.png" alt="so how did it go tellme. in simple ways"><figcaption>Fri 6 Nov, 05:22</figcaption></figure>
     </div>
     <div class="count"></div>
   </section>
@@ -221,7 +237,7 @@
 
 </div>
 <div id="zoom"><video muted loop playsinline controls></video></div>
-<div class="hint">← → to move · click a demo to enlarge</div>
+<div class="hint">← → or click to step through · click a demo to enlarge</div>
 <script>
   const deck = document.getElementById('deck');
   const slides = [...document.querySelectorAll('.slide')];
@@ -238,6 +254,12 @@
     });
     history.replaceState(null, '', '#' + (i + 1));
   }
+  // steps inside a slide: elements with data-f="1..n" appear one click at a time
+  let step = 0;
+  const maxStep = el => Math.max(0, ...[...el.querySelectorAll('[data-f]')].map(x => +x.dataset.f));
+  function setStep(k) { step = Math.max(0, Math.min(maxStep(slides[i]), k)); slides[i].querySelectorAll('[data-f]').forEach(x => x.classList.toggle('in', +x.dataset.f <= step)); history.replaceState(null, '', '#' + (i + 1) + (step ? '.' + step : '')); }
+  function next() { if (step < maxStep(slides[i])) setStep(step + 1); else if (i < slides.length - 1) { show(i + 1); setStep(0); } }
+  function prev() { if (step > 0) setStep(step - 1); else if (i > 0) { show(i - 1); setStep(maxStep(slides[i])); } }
   function closeZoom() { zoom.classList.remove('on'); zv.pause(); }
   document.querySelectorAll('.tile').forEach(t => t.addEventListener('click', () => {
     zv.src = t.querySelector('video').getAttribute('src'); zoom.classList.add('on'); zv.play().catch(() => {});
@@ -246,15 +268,15 @@
   addEventListener('keydown', e => {
     if (e.key === 'Escape') return closeZoom();
     if (e.target.tagName === 'VIDEO' && e.key === ' ') return;
-    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); closeZoom(); show(i + 1); }
-    if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); closeZoom(); show(i - 1); }
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); closeZoom(); next(); }
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); closeZoom(); prev(); }
     if (e.key === 'f') document.documentElement.requestFullscreen?.();
   });
   let x0 = null;
   addEventListener('touchstart', e => x0 = e.touches[0].clientX);
-  addEventListener('touchend', e => { if (x0 === null) return; const d = e.changedTouches[0].clientX - x0; if (Math.abs(d) > 50) show(i + (d < 0 ? 1 : -1)); x0 = null; });
+  addEventListener('touchend', e => { if (x0 === null) return; const d = e.changedTouches[0].clientX - x0; if (Math.abs(d) > 50) (d < 0 ? next : prev)(); x0 = null; });
   addEventListener('resize', fit);
-  fit(); show(i);
+  deck.addEventListener('click', e => { if (!e.target.closest('.tile, video, a, button')) next(); });
 
 // start hour of each training run, from the run logs (hour 0..23)
 (function () {
@@ -269,12 +291,14 @@
     bars += `<div class="bar${isNight(h) ? ' n' : ''}" style="height:${runs[h] / max * 82}%" data-v="${runs[h]}" title="${lab(h)}: ${runs[h]} runs"></div>`;
     xs += `<span>${h % 6 === 0 ? lab(h) : ''}</span>`;
   });
-  el.innerHTML = `<div class="plot"><div class="night-band"><em>asleep</em></div>${bars}</div><div class="xlab">${xs}</div>`;
+  el.innerHTML = `<div class="plot"><div class="night-band f" data-f="2"><em>asleep</em></div>${bars}</div><div class="xlab">${xs}</div>`;
   // night band spans the 11 pm .. 6 am bars (slots 11..18)
   const b = el.querySelectorAll('.bar'), band = el.querySelector('.night-band');
   band.style.left = (b[11].offsetLeft - 6) + 'px';
   band.style.width = (b[18].offsetLeft + b[18].offsetWidth - b[11].offsetLeft + 12) + 'px';
 })();
+  const step0 = +(location.hash.split('.')[1] || 0);
+  fit(); show(i); setStep(step0);
 </script>
 </body>
 </html>
