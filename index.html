@@ -48,17 +48,22 @@
   .photos img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; display: block; }
   .loop { margin-top: 22px; font-size: 26px; color: var(--muted); }
   .loop b { color: var(--slate); }
-  .shot { margin-top: 22px; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
-  .shot img { max-width: 100%; max-height: 100%; border-radius: 14px; box-shadow: 0 10px 30px rgba(20,20,19,.18); }
-  .slot { width: 100%; height: 100%; border: 3px dashed #C9C6BA; border-radius: 16px; display: flex; align-items: center; justify-content: center;
-          color: var(--muted); font-size: 22px; text-align: center; padding: 24px; }
+  /* real T3 Code screenshots */
+  figure { margin: 0; }
+  figure img { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line);
+               box-shadow: 0 10px 30px rgba(20,20,19,.14); }
+  figcaption { margin-top: 10px; font-size: 18px; color: var(--muted); }
+  .shot { margin-top: 26px; flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
 
-  /* 3/4 · real chat screenshots */
+  /* 3/4 · nights and mornings */
+  .s-chat { padding-top: 64px; padding-bottom: 56px; }
   .s-night { background: var(--slate); color: var(--ivory); }
   .s-night .kicker { color: #E8956F; }  /* 6.9:1 on slate */
-  .shots { margin-top: 36px; flex: 1; min-height: 0; display: flex; gap: 28px; align-items: center; justify-content: center; flex-wrap: wrap; }
-  .shots img { max-height: 330px; max-width: 660px; border-radius: 14px; box-shadow: 0 12px 40px rgba(0,0,0,.35); }
-  .s-night .slot { border-color: #4A4945; color: #B4B2A9; }
+  .s-night figure img { border-color: #3A3A37; box-shadow: 0 14px 40px rgba(0,0,0,.45); }
+  .s-night figcaption { color: #B4B2A9; }
+  .shots { margin-top: 24px; flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 26px 40px; align-content: center; align-items: start; }
+  .shots.three { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+  .shots.three figure:first-child { grid-row: 1 / span 2; align-self: center; }
 
   /* 5 · demos */
   .grid { margin-top: 36px; flex: 1; min-height: 0; display: flex; flex-wrap: wrap; justify-content: center; align-content: center; gap: 22px; }
@@ -119,21 +124,30 @@
       <div class="card">
         <div class="head"><span class="num">02</span><span class="big">Train it</span><span class="tag slow">I was the slow part</span></div>
         <div class="loop"><b>new idea</b> → train → wait → test → repeat</div>
-        <div class="shot" data-shots="train"></div>
+        <figure class="shot"><img src="shots/train-1.png" alt="Message: u will have next 10 hours to keep going"><figcaption>Mon 19 Oct, 20:05</figcaption></figure>
       </div>
     </div>
     <div class="count"></div>
   </section>
 
-  <section class="slide s-night">
+  <section class="slide s-night s-chat">
     <div class="kicker">How I ended my nights</div>
-    <div class="shots" data-shots="night"></div>
+    <div class="shots four">
+      <figure><img src="shots/night-1.png" alt="i go to sleep now"><figcaption>Tue 13 Oct, 21:27</figcaption></figure>
+      <figure><img src="shots/night-2.png" alt="dont be done before 6 am"><figcaption>Thu 22 Oct, 20:55</figcaption></figure>
+      <figure><img src="shots/night-3.png" alt="the laptop is urs now"><figcaption>Thu 29 Oct, 21:20</figcaption></figure>
+      <figure><img src="shots/night-4.png" alt="ur on ur own now im going to bed"><figcaption>Thu 5 Nov, 19:19</figcaption></figure>
+    </div>
     <div class="count"></div>
   </section>
 
-  <section class="slide">
+  <section class="slide s-chat">
     <div class="kicker">How I woke up</div>
-    <div class="shots" data-shots="morning"></div>
+    <div class="shots three">
+      <figure><img src="shots/morning-1.png" alt="im back what do i have to do?"><figcaption>Wed 21 Oct, 07:03</figcaption></figure>
+      <figure><img src="shots/morning-2.png" alt="so how did it go?"><figcaption>Fri 6 Nov, 05:21 · training thread</figcaption></figure>
+      <figure><img src="shots/morning-3.png" alt="so how did it go tellme. in simple ways"><figcaption>Fri 6 Nov, 05:22 · second thread</figcaption></figure>
+    </div>
     <div class="count"></div>
   </section>
 
@@ -165,21 +179,6 @@
 <div id="zoom"><video muted loop playsinline controls></video></div>
 <div class="hint">← → to move · click a demo to enlarge</div>
 <script>
-  // Real chat screenshots: shots/night-1.png … night-6.png, shots/morning-1.png …, shots/train-1.png (any that exist are shown)
-  const SLOT_TEXT = { train: 'Screenshot: the "keep going for hours" message', night: 'Screenshots: my last messages each night', morning: 'Screenshots: my first messages each morning' };
-  document.querySelectorAll('[data-shots]').forEach(box => {
-    const kind = box.dataset.shots, max = kind === 'train' ? 1 : 6;
-    let found = 0, pending = max;
-    for (let n = 1; n <= max; n++) {
-      const img = new Image();
-      img.alt = kind + ' ' + n;
-      img.onload = () => { found++; box.querySelector('.slot')?.remove(); box.appendChild(img); };
-      img.onerror = () => { if (--pending === 0 && !found && !box.children.length) {
-        const s = document.createElement('div'); s.className = 'slot'; s.textContent = SLOT_TEXT[kind]; box.appendChild(s); } };
-      img.src = `shots/${kind}-${n}.png`;
-    }
-  });
-
   const deck = document.getElementById('deck');
   const slides = [...document.querySelectorAll('.slide')];
   const zoom = document.getElementById('zoom'), zv = zoom.querySelector('video');
